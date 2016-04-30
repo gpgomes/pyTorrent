@@ -24,6 +24,7 @@ def ProcuraMagnetLink(arquivo):
         try:
             print('Download PirateBay')
             url = "https://thepiratebay.se/search/" + arquivo
+            # passar a verificar o torrent com mais seeds, nao soh ettv ou rartv
             inicio = arquivo + '[ettv]</a>'
             fim = '=' + arquivo
             html = urllib2.urlopen(url).read()
@@ -38,6 +39,7 @@ def ProcuraMagnetLink(arquivo):
                 magnet_link = ExtraiMagnetLinkKA(html, inicio, fim)
                 AbreMagnetLink(magnet_link)
             except:
+                # nao funciona com KickAss
                 print('Download KickAss Torrents')
                 url = "https://kat.cr/usearch/" + arquivo + '%5Brartv%5D/'
                 html = urllib2.urlopen(url).read()
@@ -45,8 +47,6 @@ def ProcuraMagnetLink(arquivo):
                 AbreMagnetLink(magnet_link)
     except:
         print('Erro no Download')
-        #mover legenda para a pasta 'falhas'
-        
 
 def ExtraiMagnetLink(html, inicio, fim):
     posicao_inicio = html.find(inicio)
@@ -74,7 +74,6 @@ def Download(lista, diretorio):
             ProcuraMagnetLink(arquivo)
         except:
             print('Erro Magnet Link')
-  
   
 if __name__ == '__main__':
     ArquivoIni = LeArquivoIni() 
