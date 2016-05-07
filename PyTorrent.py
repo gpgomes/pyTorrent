@@ -96,4 +96,8 @@ if __name__ == '__main__':
     if len(lista_download) != 0:
         print('Iniciando Lista de Download:')
         Download(lista_download, dir_legendas)
+        delete = raw_input('Deletar? ')
+        if (delete == 'S') or (delete == 's'):
+            print('Deletando')
+            DeletaLista(dir_falhas, lista_delete)
     raw_input('Fim')
