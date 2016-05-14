@@ -1,5 +1,7 @@
 import urllib2
 from PyTorrentFnc import *
+from bs4 import BeautifulSoup
+import requests
 
 def SeparaArquivos(lista_legendas, lista_download, lista_delete):
     # TO DO: melhorar escolha de arquivos
@@ -16,57 +18,15 @@ def SeparaArquivos(lista_legendas, lista_download, lista_delete):
 def DeletaArquivo(diretorio, arquivo):
     os.remove(diretorio+'\\'+arquivo+'.srt')
 
-def AbreMagnetLink(magnet_link):
-    os.startfile(magnet_link)
-
 def ProcuraMagnetLink(arquivo):
-    try:
-        try:
-            print('Download PirateBay')
-            url = "https://thepiratebay.se/search/" + arquivo
-            # passar a verificar o torrent com mais seeds, nao soh ettv ou rartv
-            inicio = arquivo + '[ettv]</a>'
-            fim = '=' + arquivo
-            html = urllib2.urlopen(url).read()
-            magnet_link = ExtraiMagnetLink(html, inicio, fim)
-            AbreMagnetLink(magnet_link)
-        except:
-            inicio = "'magnet': '"
-            fim = "&dn"
-            try:            
-                url = "https://kat.cr/usearch/" + arquivo + '%5Bettv%5D/'
-                html = urllib2.urlopen(url).read()
-                magnet_link = ExtraiMagnetLinkKA(html, inicio, fim)
-                AbreMagnetLink(magnet_link)
-            except:
-                # nao funciona com KickAss
-                print('Download KickAss Torrents')
-                url = "https://kat.cr/usearch/" + arquivo + '%5Brartv%5D/'
-                html = urllib2.urlopen(url).read()
-                magnet_link = ExtraiMagnetLinkKA(html, inicio, fim)
-                AbreMagnetLink(magnet_link)
-    except:
-        print('Erro no Download')
-
-def ExtraiMagnetLink(html, inicio, fim):
-    posicao_inicio = html.find(inicio)
-    posicao_fim = html.find(fim)
-    html = html[posicao_inicio+len(inicio):posicao_fim+len(fim)]
-    posicao_magnet = html.index('magnet')
-    html = html[posicao_magnet:]
-    return html
-
-def ExtraiMagnetLinkKA(html, inicio, fim):
-    posicao_inicio = html.find(inicio)
-    posicao_fim = html.find(fim)
-    html = html[posicao_inicio+len(inicio):posicao_fim+len(fim)]
-    return html
-
-def ImprimeInstrucao(string):
-    ImprimeIni = False
-    if ImprimeIni:
-        print(string)
-
+    url = 'https://kat.cr/usearch/' + arquivo +'/'
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'lxml')
+    for a in soup.find_all('a', href=True):
+        if a['href'].find('magnet') != -1:
+            if (a['href'].find('ettv') != -1) or (a['href'].find('rartv') != -1):
+                os.startfile(a['href'])           
+   
 def Download(lista, diretorio):
     for arquivo in lista:
         print(arquivo)

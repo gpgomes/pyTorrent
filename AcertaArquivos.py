@@ -4,6 +4,7 @@ def AcertaArquivo(lista_diretorios, arquivo, diretorio_torrent):
     print(arquivo)
     ettv = False
     rartv = False
+    tvteam = False
     diretorio = arquivo
 
     if arquivo + '[ettv]' in lista_diretorios:
@@ -12,6 +13,8 @@ def AcertaArquivo(lista_diretorios, arquivo, diretorio_torrent):
     if arquivo + '[rarbg]' in lista_diretorios:
         rartv = True
         diretorio = diretorio + '[rarbg]'
+    if '[ www.torrenting.com ] - ' + arquivo in lista_diretorios:
+        diretorio = '[ www.torrenting.com ] - ' + arquivo
 
     arquivo_video = ProcurarArquivosMult(diretorio_torrent + diretorio, '.mp4', '.mkv')
     arquivo_original = diretorio_torrent+'\\'+diretorio+'\\'+arquivo_video[0]
