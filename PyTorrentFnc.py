@@ -1,4 +1,6 @@
 import os
+import datetime
+import time
 
 def LeArquivoIni():
     arquivoIni = 'PyTorrent.ini'
@@ -74,5 +76,11 @@ def LeArquivo(arquivo):
 
 def DeletaDiretorio(diretorio):
     os.rmdir(diretorio)
+
+def Log(AsMensagem):
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    print('%s - %s' % (st, AsMensagem))
+
 
         

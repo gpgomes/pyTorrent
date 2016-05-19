@@ -41,8 +41,11 @@ if __name__ == '__main__':
     lista_legendas = ProcurarArquivos(dir_legendas, '.srt')
     lista_diretorios = ProcurarDiretorios(diretorio)
     for legenda in lista_legendas:
-        AcertaArquivo(lista_diretorios, legenda[:-4], diretorio)
-        MoveArquivo(dir_legendas, diretorio, legenda)
+        try:
+            AcertaArquivo(lista_diretorios, legenda[:-4], diretorio)
+            MoveArquivo(dir_legendas, diretorio, legenda)
+        except:
+            pass
     raw_input('Fim')
 
 
