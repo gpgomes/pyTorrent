@@ -64,6 +64,9 @@ def DeletaLista(diretorio, lista):
     for arquivo in lista:
         os.remove(diretorio+'\\'+arquivo)
 
+def DeletaArquivo(arquivo):
+    os.remove(arquivo)
+
 def MoverArquivosEmLista(diretorio_inicial, diretorio_final, lista):
     for arquivo in lista:
         os.rename(diretorio_inicial+'\\'+arquivo, diretorio_final+'\\'+arquivo)
