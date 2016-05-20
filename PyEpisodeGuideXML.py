@@ -1,8 +1,9 @@
-import urllib2
 import csv
 import PyTorrentFnc
 from bs4 import BeautifulSoup
 import requests
+from datetime import datetime
+from xml.dom import minidom
               
 def DownloadCSV(url):
     url = 'http://www.epguides.com/' + url[3:len(url)]
@@ -33,18 +34,35 @@ def ProcuraLinkCSV(url):
             return a['href']
             break
 
-def PreparaXML():
+def PreparaXML(AsTituloShow):
+    doc = minidom.Document()
+    show = doc.createElement('show')
+    doc.appendChild(show)
+    show.setAttribute('titulo', AsTituloShow)
     arquivo_csv = open('temp.csv', 'r')   
     csv_dados = csv.DictReader(arquivo_csv)
     for episodio in csv_dados:
         if episodio['number'][0] != 'S':
-            print(episodio['season'], episodio['episode'], episodio['title'])
+            episodio_xml = doc.createElement('episodio')
+            titulo = doc.createTextNode(episodio['title'])
+            episodio_xml.appendChild(titulo)
+            if int(episodio['season']) < 10:
+                season = '0' + episodio['season']
+            if int(episodio['episode']) < 10:
+                episode = '0' + episodio['episode']
+            data = datetime.strptime(episodio['airdate'], '%d %b %y')
+            episodio_xml.setAttribute('codigo', ('S%sE%s' % (season, episode)))
+            episodio_xml.setAttribute('data', data.strftime("%Y-%m-%d"))
+            show.appendChild(episodio_xml)
     arquivo_csv.close()
-    #TODO Criar Guia em XML/Show
-    
+    xml_str = doc.toprettyxml(indent="  ")
+    with open(AsTituloShow+".xml", "w") as f:
+        f.write(xml_str)
+    PyTorrentFnc.DeletaArquivo('temp.csv')
     
 if __name__ == '__main__':
+    #TODO Preparar Arquivo com lista de seriados
     DownloadCSV(ProcuraLinkCSV('http://www.epguides.com/GameofThrones'))
-    PreparaXML()
+    PreparaXML('GameOfThrones')
     
     
