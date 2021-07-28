@@ -40,7 +40,7 @@ class PyTorrent(object):
 
     def execute(self):
         self.audit.info("Starting")
-        self.utorrent_client = UTorrentAPI('http://127.0.0.1:8080/gui', self.configuration.utorrent_username,
+        self.utorrent_client = UTorrentAPI(self.configuration.utorrent_api, self.configuration.utorrent_username,
                                            self.configuration.utorrent_password)
         self.audit.input("Give me a number: ")
         option = int(input())

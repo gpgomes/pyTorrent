@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 class Configuration(object):
     def __init__(self):
         load_dotenv()
-
+        self.utorrent_api = os.getenv('UTORRENT_API')
         self.ziped_subtitles_dir = os.getenv('ZIPED_SUBTITLE_DIR')
         self.torrent_dir = os.getenv('TORRENT_DIR')
         self.subtitles_dir = os.getenv('SUBTTITLE_DIR')

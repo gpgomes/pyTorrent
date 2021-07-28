@@ -62,4 +62,4 @@ class TorrentAPIHandler(object):
                 self.audit.error(f'Error getting magnet_link for {query}: {E}')
         else:
             self.audit.error(f'No more tries for {query}')
-            self.audit.error(f'Error getting magnet_link for {query}: {E}')
+            self.audit.error(f'Error getting magnet_link for {query}')
