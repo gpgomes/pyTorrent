@@ -45,20 +45,21 @@ class TorrentAPIHandler(object):
             return torrent_result['download']
 
     def get_magnet_link(self, query, retry=3):
+        self.audit.info(f"Searching {query}")
         search_url = self.get_search_url(query=query)
-        try:
-            result = self.make_request(search_url=search_url)
-            if not result:
-                self.audit.warning("Waiting...")
-                sleep(10)
+        if retry > 0:
+            try:
                 result = self.make_request(search_url=search_url)
                 if not result:
-                    raise Exception
+                    self.audit.warning("Waiting...")
+                    sleep(10)
+                    self.audit.warning(f"Retry number {retry}")
+                    self.get_magnet_link(query=query, retry=retry-1)
                 else:
                     return result
-            else:
-                return result
 
-        except Exception as E:
+            except Exception as E:
+                self.audit.error(f'Error getting magnet_link for {query}: {E}')
+        else:
+            self.audit.error(f'No more tries for {query}')
             self.audit.error(f'Error getting magnet_link for {query}: {E}')
-
